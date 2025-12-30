@@ -3,22 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego del Mapa de España</title>
+    <title>¡Explora España! - Juego de Mapas</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="game-container">
-        <h1>¿Dónde está <span id="target-region">...</span>?</h1>
+    <div class="game-board">
+        <header>
+            <h1>🌍 ¡Encuentra la provincia!</h1>
+            <div class="mission-box">
+                <p>Busca: <span id="target-region">...</span></p>
+            </div>
+        </header>
         
-        <div class="stats">
-            <p>Puntuación: <span id="score">0</span></p>
-            <p id="feedback-message"></p>
-        </div>
+        <div class="game-layout">
+            <div id="map-container">
+                <svg id="spain-svg" viewBox="150 10 420 350" preserveAspectRatio="xMidYMid meet">
+                    </svg>
+            </div>
 
-        <div id="map-container">
-            <svg id="spain-svg" viewBox="150 10 420 350" preserveAspectRatio="xMidYMid meet">
-                </svg>
+            <aside class="side-panel">
+                <div class="score-card">
+                    <span class="label">PUNTOS</span>
+                    <span id="score">0</span>
+                </div>
+                <p id="feedback-message"></p>
+            </aside>
         </div>
     </div>
 

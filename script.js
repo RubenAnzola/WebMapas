@@ -341,18 +341,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // B. Función para elegir una nueva provincia al azar
     function pickNewMission() {
-        // Seleccionamos un objeto aleatorio del array regions
+        // 1. Bloqueamos el clic un instante para evitar que el niño 
+        // haga doble clic por error mientras se limpia el mapa
+        canClick = false; 
+
+        // 2. Elegimos la provincia al azar
         const randomIndex = Math.floor(Math.random() * regions.length);
         currentTarget = regions[randomIndex];
         
-        // Actualizamos el texto de la interfaz
-        targetEl.textContent = currentTarget.name;
+        // 3. Actualizamos los textos (Poner el nombre en MAYÚSCULAS ayuda a leer mejor)
+        targetEl.textContent = currentTarget.name.toUpperCase();
         feedbackEl.textContent = "";
         
-        // Quitamos los colores rojo (wrong) y verde (correct) de todas las provincias
+        // 4. Limpiamos todas las provincias (Rojo y Verde)
         document.querySelectorAll('.region').forEach(el => {
             el.classList.remove('wrong', 'correct');
         });
+
+        // 5. Reactivamos el clic
+        canClick = true;
     }
 
     // C. Función que maneja el clic
