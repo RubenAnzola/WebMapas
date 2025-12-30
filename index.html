@@ -3,68 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explora España Kids</title>
+    <title>Juego del Mapa de España</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
-    <style>
-        /* Estilos para que parezca un mapa educativo */
-        #spain-map {
-            width: 95%;
-            max-width: 900px;
-            height: auto;
-            margin: 20px auto;
-            display: block;
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
-        }
-        .region {
-            fill: #f9f4e8; /* Color crema suave */
-            stroke: #666;    /* Bordes grises */
-            stroke-width: 0.8;
-            transition: all 0.2s;
-        }
-        .region:hover {
-            fill: #ffeb3b; /* Amarillo al pasar el ratón */
-            cursor: pointer;
-            stroke: #000;
-            stroke-width: 1.5;
-        }
-        .correct { fill: #4caf50 !important; } /* Verde acierto */
-        .wrong { fill: #f44336 !important; }   /* Rojo error */
-    </style>
 </head>
 <body>
-    <div class="game-container">
-        <header>
-            <h1>🌍 Misión: España 🇪🇸</h1>
-            <div id="instruction-box">
-                <p id="mission-text">Busca: <span id="target-region">Cargando...</span></p>
-            </div>
-            <div id="score-board">Puntos: <span id="score">0</span></div>
-        </header>
 
-        <main>
-            <svg id="spain-map" viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
-                <path id="galicia" class="region" d="M148,85 L182,78 L206,85 L225,123 L205,158 L146,166 L118,142 L121,105 Z" />
-                <path id="asturias" class="region" d="M206,85 L292,82 L306,118 L225,123 Z" />
-                <path id="cantabria" class="region" d="M292,82 L345,86 L342,125 L306,118 Z" />
-                <path id="paisvasco" class="region" d="M345,86 L395,95 L392,135 L342,125 Z" />
-                <path id="navarra" class="region" d="M395,95 L445,105 L448,168 L392,135 Z" />
-                <path id="aragon" class="region" d="M445,105 L535,148 L515,285 L442,265 L430,225 L448,168 Z" />
-                <path id="cataluna" class="region" d="M535,148 L642,165 L625,268 L515,285 Z" />
-                <path id="larioja" class="region" d="M365,135 L392,135 L405,165 L365,165 Z" />
-                <path id="castillayleon" class="region" d="M225,123 L306,118 L342,125 L365,135 L365,165 L405,165 L430,225 L355,305 L222,285 L205,158 Z" />
-                <path id="madrid" class="region" d="M365,265 L408,265 L408,312 L365,312 Z" />
-                <path id="extremadura" class="region" d="M222,285 L335,305 L328,435 L235,435 L208,365 Z" />
-                <path id="castillalamancha" class="region" d="M335,305 L430,225 L442,265 L495,285 L495,435 L328,435 L355,305 Z" />
-                <path id="valencia" class="region" d="M495,285 L545,265 L545,435 L495,435 Z" />
-                <path id="murcia" class="region" d="M465,435 L505,435 L505,485 L465,485 Z" />
-                <path id="andalucia" class="region" d="M235,435 L465,435 L505,485 L485,555 L215,535 Z" />
-                <circle id="baleares" class="region" cx="645" cy="335" r="35" />
-                <rect id="canarias" class="region" x="120" y="585" width="120" height="85" />
-            </svg>
-            <div id="feedback-message"></div>
-        </main>
+    <div class="game-container">
+        <h1>¿Dónde está <span id="target-region">...</span>?</h1>
+        
+        <div class="stats">
+            <p>Puntuación: <span id="score">0</span></p>
+            <p id="feedback-message"></p>
+        </div>
+
+        <div id="map-container">
+            <svg id="spain-svg" viewBox="150 10 420 350" preserveAspectRatio="xMidYMid meet">
+                </svg>
+        </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>

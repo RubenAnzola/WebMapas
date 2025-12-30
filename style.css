@@ -1,73 +1,57 @@
 body {
-    background-color: #87CEEB; /* Azul cielo */
-    font-family: 'Fredoka One', cursive, sans-serif;
-    text-align: center;
+    font-family: sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
     margin: 0;
-    color: #333;
 }
 
-header {
-    background-color: #FFD700;
-    padding: 20px;
-    border-bottom: 5px solid #FFA500;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-#instruction-box {
+.game-container {
+    text-align: center;
     background: white;
-    display: inline-block;
-    padding: 15px 30px;
-    border-radius: 20px;
-    margin: 10px;
-    font-size: 1.5rem;
-    border: 3px solid #333;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    max-width: 90%;
 }
 
 #target-region {
-    color: #FF4500;
-    font-size: 1.8rem;
-    text-transform: uppercase;
+    color: #3498db;
+    text-transform: capitalize;
+    font-weight: bold;
 }
 
-svg {
-    max-height: 70vh; /* Que no ocupe más del 70% de la altura de la pantalla */
-    width: auto;
-    margin-top: 20px;
-    filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.2));
+.stats {
+    margin-bottom: 20px;
+    height: 60px;
 }
 
-/* Estilo de las Comunidades */
+#map-container {
+    width: 100%;
+    max-width: 800px;
+}
+
+/* Estilo base de las provincias */
 .region {
-    fill: #d9d9d9;     /* Gris claro por defecto */
-    stroke: #ffffff;   /* Bordes blancos */
-    stroke-width: 1.5;
+    fill: #ddd;
+    stroke: #fff;
+    stroke-width: 0.5;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: fill 0.2s, transform 0.2s;
 }
 
 .region:hover {
-    fill: #7CFC00; /* Verde brillante al pasar el ratón */
-    transform: scale(1.01); /* Efecto pop-up */
+    fill: #bbb;
 }
 
-/* Clases para aciertos y errores */
+/* Clase cuando el usuario acierta */
 .correct {
-    fill: #32CD32 !important; /* Verde éxito definitivo */
-    animation: bounce 0.5s;
+    fill: #2ecc71 !important;
 }
 
+/* Clase cuando el usuario falla */
 .wrong {
-    fill: #FF6347 !important; /* Rojo error */
-    animation: shake 0.5s;
-}
-
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+    fill: #e74c3c !important;
 }
