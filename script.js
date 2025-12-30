@@ -354,7 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
     { name: "Extremadura", ids: ["caceres", "badajoz"] },
     { name: "Andalucía", ids: ["huelva", "sevilla", "cordoba", "jaen", "cadiz", "malaga", "granada", "almeria"] },
     { name: "Islas Baleares", ids: ["islas baleares"] }, 
-    { name: "Canarias", ids: ["santa_cruz", "las_palmas"] },
+    { name: "Canarias", ids: ["santa cruz", "las palmas"] },
     { name: "Ceuta y Melilla", ids: ["ceuta", "melilla"] }
 ];
 
@@ -376,7 +376,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 5. FUNCIÓN PARA DIBUJAR (Aparecerá el mapa al cargar)
     function drawMap() {
-    // 1. Dibujar regiones
     regions.forEach(reg => {
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
         path.setAttribute("d", reg.path);
@@ -384,39 +383,37 @@ document.addEventListener("DOMContentLoaded", () => {
         path.setAttribute("class", "region");
 
         // --- CORRECCIÓN CANARIAS ---
-        // Las coordenadas originales están muy a la derecha (X ~ 490)
-        // Restamos unos 310 a la X para moverlas a la izquierda.
-        // Restamos un poco a la Y para subirlas ligeramente si hace falta.
-        if (reg.id === "santa_cruz" || reg.id === "las_palmas") {
-            // Ajuste manual: Mover 310px a la izquierda y subir 20px
-            path.setAttribute("transform", "translate(-310, -20)");
+        // Movemos las islas a la izquierda y un poco hacia abajo
+        if (reg.id === "santa cruz" || reg.id === "las palmas") {
+            // Ajustamos para el nuevo viewBox:
+            path.setAttribute("transform", "translate(-300, 50)"); 
         }
         
-        // Eventos
-        path.addEventListener('click', handleSelection);
+        // ... (resto de tus eventos click, mouseover, etc.) ...
         
-        // Efecto hover (resaltar toda la comunidad al pasar el mouse)
+        path.addEventListener('click', handleSelection);
         path.addEventListener('mouseover', (e) => highlightCommunity(e.target.id, true));
         path.addEventListener('mouseout', (e) => highlightCommunity(e.target.id, false));
 
         svg.appendChild(path);
     });
 
-    // 2. Dibujar línea divisoria visual para las Canarias
+    // 2. Dibujar línea divisoria
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    // Coordenadas ajustadas para que aparezca encima de las islas movidas
-    line.setAttribute("x1", "130"); 
-    line.setAttribute("y1", "270");
-    line.setAttribute("x2", "230");
-    line.setAttribute("y2", "270");
-    line.setAttribute("stroke", "#555");
-    line.setAttribute("stroke-width", "1");
-    line.setAttribute("stroke-dasharray", "5,5"); // Línea discontinua
+    // Coordenadas ajustadas para que queden encima de las islas en su nueva posición
+    line.setAttribute("x1", "80");   // Inicio X
+    line.setAttribute("y1", "300");  // Inicio Y
+    line.setAttribute("x2", "200");  // Fin X
+    line.setAttribute("y2", "300");  // Fin Y
+    line.setAttribute("class", "canarias-divider");
+    line.setAttribute("stroke", "#999");
+    line.setAttribute("stroke-width", "2");
+    line.setAttribute("stroke-dasharray", "5,5");
     svg.appendChild(line);
 }
 
 // Función auxiliar para resaltar toda la comunidad al pasar el ratón
-function highlightCommunity(provId, isHovering) {
+    function highlightCommunity(provId, isHovering) {
     if (gameMode !== 'comunidades') return; // Solo funciona en modo comunidades
 
     // Buscar a qué comunidad pertenece la provincia
@@ -438,7 +435,7 @@ function highlightCommunity(provId, isHovering) {
 
     // 5. FUNCIÓN DE SELECCIÓN (Detecta si acertó)
   function handleSelection(e) {
-if (isCorrect) {
+    if (isCorrect) {
         canClick = false;
         score += 10;
         scoreEl.textContent = score;
@@ -485,7 +482,7 @@ if (isCorrect) {
     }
 }
 
-function startGame(mode) {
+    function startGame(mode) {
         gameMode = mode; // 'provincias' o 'comunidades'
         
         // Ocultar menú y mostrar juego
@@ -560,7 +557,7 @@ function startGame(mode) {
     });
 
     // Función global para el botón Volver
-window.goBack = function() {
+    window.goBack = function() {
     document.getElementById('game-screen').style.display = 'none';
     document.getElementById('home-menu').style.display = 'flex'; // O 'block', según tu CSS
 };
