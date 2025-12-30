@@ -316,49 +316,39 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     ];
 
+    // 2. PALETA DE COLORES (Uno diferente para cada comunidad)
     const communityColors = [
-    "#e6194b", // Galicia - Rojo
-    "#3cb44b", // Asturias - Verde
-    "#ffe119", // Cantabria - Amarillo
-    "#4363d8", // País Vasco - Azul
-    "#f58231", // Navarra - Naranja
-    "#911eb4", // La Rioja - Morado
-    "#46f0f0", // Aragón - Cian
-    "#f032e6", // Cataluña - Magenta
-    "#bcf60c", // Castilla y León - Lima
-    "#fabebe", // Madrid - Rosa palo
-    "#008080", // Castilla-La Mancha - Verde azulado
-    "#e6beff", // C. Valenciana - Lavanda
-    "#9a6324", // Murcia - Marrón
-    "#fffac8", // Extremadura - Crema
-    "#800000", // Andalucía - Granate
-    "#aaffc3", // Baleares - Menta
-    "#808000", // Canarias - Oliva
-    "#ffd8b1", // Ceuta/Melilla - Melocotón
-    "#000075"  // Extra (por si acaso)
-];
- const communities = [
-    { name: "Galicia", ids: ["la coruña", "lugo", "ourense", "pontevedra"] },
-    { name: "Asturias", ids: ["asturias"] },
-    { name: "Cantabria", ids: ["cantabria"] },
-    { name: "País Vasco", ids: ["vizcaya", "guipuzcoa", "álava"] },
-    { name: "Navarra", ids: ["navarra"] },
-    { name: "La Rioja", ids: ["la rioja"] },
-    { name: "Aragón", ids: ["huesca", "zaragoza", "teruel"] },
-    { name: "Cataluña", ids: ["lleida", "girona", "barcelona", "tarragona"] },
-    { name: "Castilla y León", ids: ["leon", "palencia", "burgos", "zamora", "valladolid", "soria", "salamanca", "avila", "segovia"] },
-    { name: "Madrid", ids: ["madrid"] },
-    { name: "Castilla-La Mancha", ids: ["guadalajara", "cuenca", "toledo", "ciudad real", "albacete"] },
-    { name: "C. Valenciana", ids: ["castellon", "valencia", "alicante"] },
-    { name: "Murcia", ids: ["murcia"] },
-    { name: "Extremadura", ids: ["caceres", "badajoz"] },
-    { name: "Andalucía", ids: ["huelva", "sevilla", "cordoba", "jaen", "cadiz", "malaga", "granada", "almeria"] },
-    { name: "Islas Baleares", ids: ["islas baleares"] }, 
-    { name: "Canarias", ids: ["santa cruz", "las palmas"] },
-    { name: "Ceuta y Melilla", ids: ["ceuta", "melilla"] }
-];
+        "#FF5733", "#33FF57", "#3357FF", "#FF33F6", "#33FFF6", 
+        "#F6FF33", "#FF8C33", "#8C33FF", "#33FF8C", "#FF3333",
+        "#33A1FF", "#A133FF", "#FF3380", "#33FF99", "#FFA833",
+        "#3366FF", "#FF3366", "#66FF33", "#9933FF", "#581845"
+    ];
 
-   // 2. REFERENCIAS AL HTML (Asegúrate de que estos IDs existan en tu HTML)
+
+    // 3. DEFINICIÓN DE COMUNIDADES (CORREGIDA: IDs deben coincidir con regions)
+    const communities = [
+        { name: "Galicia", ids: ["la coruña", "lugo", "ourense", "pontevedra"] },
+        { name: "Asturias", ids: ["asturias"] },
+        { name: "Cantabria", ids: ["cantabria"] },
+        { name: "País Vasco", ids: ["vizcaya", "guipuzcoa", "álava"] }, // Asegúrate que 'álava' coincida con tu region (con o sin tilde)
+        { name: "Navarra", ids: ["navarra"] },
+        { name: "La Rioja", ids: ["la rioja"] },
+        { name: "Aragón", ids: ["huesca", "zaragoza", "teruel"] },
+        { name: "Cataluña", ids: ["lleida", "girona", "barcelona", "tarragona"] },
+        { name: "Castilla y León", ids: ["leon", "palencia", "burgos", "zamora", "valladolid", "soria", "salamanca", "avila", "segovia"] },
+        { name: "Madrid", ids: ["madrid"] },
+        { name: "Castilla-La Mancha", ids: ["guadalajara", "cuenca", "toledo", "ciudad real", "albacete"] },
+        { name: "C. Valenciana", ids: ["castellon", "valencia", "alicante"] },
+        { name: "Murcia", ids: ["murcia"] },
+        { name: "Extremadura", ids: ["caceres", "badajoz"] },
+        { name: "Andalucía", ids: ["huelva", "sevilla", "cordoba", "jaen", "cadiz", "malaga", "granada", "almeria"] },
+        { name: "Islas Baleares", ids: ["islas baleares"] }, 
+        // CORRECCIÓN: Usamos guiones bajos para coincidir con el mapa
+        { name: "Canarias", ids: ["santa_cruz", "las_palmas"] }, 
+        { name: "Ceuta y Melilla", ids: ["ceuta", "melilla"] }
+    ];
+
+   // REFERENCIAS AL HTML
     const svg = document.getElementById('spain-svg'); 
     const scoreEl = document.getElementById('score');
     const targetEl = document.getElementById('target-region');
@@ -368,161 +358,144 @@ document.addEventListener("DOMContentLoaded", () => {
     const menuContainer = document.getElementById('home-menu'); // O la clase .menu-container
     const gameScreen = document.getElementById('game-screen');  // O la clase .game-board
 
-    // 4. VARIABLES DE ESTADO
+    // VARIABLES DE ESTADO
     let currentTarget = null;
     let score = 0;
-    let canClick = true; // Para evitar que el niño haga clics locos mientras sale el mensaje
-    let gameMode = 'provincias'
+    let canClick = true;
+    let gameMode = 'provincias';
 
-    // 5. FUNCIÓN PARA DIBUJAR (Aparecerá el mapa al cargar)
+ 
+  // 4 --- FUNCIÓN 1: DIBUJAR MAPA Y MOVER CANARIAS ---
     function drawMap() {
-    regions.forEach(reg => {
-        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        path.setAttribute("d", reg.path);
-        path.setAttribute("id", reg.id);
-        path.setAttribute("class", "region");
+        // Limpiar SVG por si acaso
+        svg.innerHTML = ''; 
 
-        // --- CORRECCIÓN CANARIAS ---
-        // Movemos las islas a la izquierda y un poco hacia abajo
-        if (reg.id === "santa cruz" || reg.id === "las palmas") {
-            // Ajustamos para el nuevo viewBox:
-            path.setAttribute("transform", "translate(-300, 50)"); 
-        }
-        
-        // ... (resto de tus eventos click, mouseover, etc.) ...
-        
-        path.addEventListener('click', handleSelection);
-        path.addEventListener('mouseover', (e) => highlightCommunity(e.target.id, true));
-        path.addEventListener('mouseout', (e) => highlightCommunity(e.target.id, false));
+        regions.forEach(reg => {
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", reg.path);
+            path.setAttribute("id", reg.id);
+            path.setAttribute("class", "region");
 
-        svg.appendChild(path);
-    });
-
-    // 2. Dibujar línea divisoria
-    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    // Coordenadas ajustadas para que queden encima de las islas en su nueva posición
-    line.setAttribute("x1", "80");   // Inicio X
-    line.setAttribute("y1", "300");  // Inicio Y
-    line.setAttribute("x2", "200");  // Fin X
-    line.setAttribute("y2", "300");  // Fin Y
-    line.setAttribute("class", "canarias-divider");
-    line.setAttribute("stroke", "#999");
-    line.setAttribute("stroke-width", "2");
-    line.setAttribute("stroke-dasharray", "5,5");
-    svg.appendChild(line);
-}
-
-// Función auxiliar para resaltar toda la comunidad al pasar el ratón
-    function highlightCommunity(provId, isHovering) {
-    if (gameMode !== 'comunidades') return; // Solo funciona en modo comunidades
-
-    // Buscar a qué comunidad pertenece la provincia
-    const comm = communities.find(c => c.ids.includes(provId));
-    
-    if (comm) {
-        comm.ids.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                if (isHovering) {
-                    el.classList.add('community-hover');
-                } else {
-                    el.classList.remove('community-hover');
-                }
+            // MOVIMIENTO DE CANARIAS AL LADO IZQUIERDO INFERIOR
+            if (reg.id === "santa cruz" || reg.id === "las palmas") {
+                // Ajustamos coordenadas para moverlas a la izquierda y abajo
+                path.setAttribute("transform", "translate(-280, 20)"); 
             }
+            
+            // Asignar eventos
+            path.addEventListener('click', handleSelection);
+            
+            // Eventos para resaltar comunidad entera al pasar el ratón
+            path.addEventListener('mouseover', (e) => highlightCommunity(e.target.id, true));
+            path.addEventListener('mouseout', (e) => highlightCommunity(e.target.id, false));
+
+            svg.appendChild(path);
         });
+
+        // NOTA: He eliminado el código que dibujaba la línea divisoria como pediste.
     }
-}
 
-    // 5. FUNCIÓN DE SELECCIÓN (Detecta si acertó)
-  function handleSelection(e) {
-    if (isCorrect) {
-        canClick = false;
-        score += 10;
-        scoreEl.textContent = score;
-        feedbackEl.textContent = "¡MUY BIEN! 🎉";
-        feedbackEl.style.color = "green";
+// --- FUNCIÓN 2: RESALTAR COMUNIDAD ENTERA (HOVER) ---
+    function highlightCommunity(provId, isHovering) {
+        // Solo aplicar efecto de grupo si estamos en modo comunidades
+        if (gameMode !== 'comunidades') return; 
 
-        // --- LÓGICA DE COLORES ---
-        // 1. Buscamos a qué comunidad pertenece la provincia clicada/objetivo
-        // (Usamos currentTarget.name si estamos en modo provincias, o buscamos por ID)
-        let commIndex = -1;
+        // Buscar a qué comunidad pertenece la provincia sobre la que está el ratón
+        const comm = communities.find(c => c.ids.includes(provId));
         
-        // Buscamos la comunidad en el array 'communities' que contiene este ID
-        commIndex = communities.findIndex(c => c.ids.includes(clickedId));
+        if (comm) {
+            comm.ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && !el.classList.contains('correct')) { // No quitamos el color si ya acertó
+                    if (isHovering) {
+                        el.classList.add('community-hover');
+                    } else {
+                        el.classList.remove('community-hover');
+                    }
+                }
+            });
+        }
+    }
+// --- FUNCIÓN 3: GESTIONAR CLIC (LOGICA PRINCIPAL) ---
+    function handleSelection(e) {
+        if (!canClick) return;
 
-        // Si encontramos la comunidad, cogemos su color
-        const color = (commIndex !== -1) ? communityColors[commIndex] : "#4caf50"; // Verde por defecto si falla
+        // AQUÍ ESTABA EL ERROR: Faltaba definir esta variable
+        const clickedId = e.target.id; 
+        
+        let isCorrect = false;
 
+        // Comprobar acierto
         if (gameMode === 'provincias') {
-            const el = document.getElementById(clickedId);
-            el.classList.add('correct');
-            el.style.fill = color; // <--- AQUI APLICAMOS EL COLOR ÚNICO
+            if (clickedId === currentTarget.id) isCorrect = true;
         } else {
-            // Modo Comunidades: Iluminamos todas las provincias de esa comunidad
-            if(commIndex !== -1) {
-                communities[commIndex].ids.forEach(id => {
+            if (currentTarget.ids.includes(clickedId)) isCorrect = true;
+        }
+
+        if (isCorrect) {
+            canClick = false;
+            score += 10;
+            scoreEl.textContent = score;
+            feedbackEl.textContent = "¡MUY BIEN! 🎉";
+            feedbackEl.style.color = "green";
+
+            // --- COLOREAR COMUNIDADES DIFERENTES ---
+            
+            // 1. Encontrar a qué comunidad pertenece el objetivo para saber su índice
+            let commIndex = -1;
+            if (gameMode === 'provincias') {
+                commIndex = communities.findIndex(c => c.ids.includes(currentTarget.id));
+            } else {
+                commIndex = communities.findIndex(c => c.name === currentTarget.name);
+            }
+
+            // 2. Elegir color basado en el índice
+            const color = (commIndex !== -1) ? communityColors[commIndex % communityColors.length] : "#2ecc71";
+
+            // 3. Aplicar color
+            if (gameMode === 'provincias') {
+                const el = document.getElementById(clickedId);
+                el.classList.add('correct');
+                el.style.fill = color; // Pintar provincia
+            } else {
+                // Pintar TODA la comunidad
+                currentTarget.ids.forEach(id => {
                     const el = document.getElementById(id);
                     if (el) {
                         el.classList.add('correct');
-                        el.style.fill = color; // <--- APLICAR COLOR A TODO EL GRUPO
+                        el.classList.remove('community-hover'); // Quitar efecto hover
+                        el.style.fill = color; // Pintar comunidad
                     }
                 });
             }
+
+            setTimeout(() => {
+                pickNewMission();
+            }, 1500);
+
+        } else {
+            // Fallo
+            e.target.classList.add('wrong');
+            feedbackEl.textContent = "¡Ups! Intenta de nuevo.";
+            feedbackEl.style.color = "var(--wrong)";
+            setTimeout(() => e.target.classList.remove('wrong'), 1000);
         }
-
-        setTimeout(() => {
-            pickNewMission();
-        }, 1500);
-
-    } else {
-        e.target.classList.add('wrong');
-        feedbackEl.textContent = "¡Ups! Intenta de nuevo.";
-        feedbackEl.style.color = "red";
-        setTimeout(() => e.target.classList.remove('wrong'), 1000);
-    }
-}
-
-    function startGame(mode) {
-        gameMode = mode; // 'provincias' o 'comunidades'
-        
-        // Ocultar menú y mostrar juego
-        // OJO: Asegúrate que los IDs coinciden con tu HTML
-        document.getElementById('home-menu').style.display = 'none'; 
-        document.getElementById('game-screen').style.display = 'block'; 
-        
-        // Reiniciar puntuación
-        score = 0;
-        scoreEl.textContent = 0;
-        
-        // Reiniciar visualmente el mapa
-        document.querySelectorAll('.region').forEach(el => {
-            el.classList.remove('correct', 'wrong');
-        });
-
-        // Iniciar la primera misión
-        pickNewMission();
     }
 
-    // 🔥 ¡ESTA LÍNEA ES OBLIGATORIA! 🔥
-    // Hace que el HTML pueda ver la función que está dentro de este archivo
-    window.startGame = startGame;
-
-    // 6. FUNCIÓN NUEVA MISIÓN
-   // 6. FUNCIÓN NUEVA MISIÓN (CORREGIDA)
+    // --- FUNCIÓN 4: SELECCIONAR NUEVA MISIÓN ---
     function pickNewMission() {
         let remaining = [];
 
-        // A. DECIDIMOS QUÉ LISTA USAR
+        // Filtramos qué falta por acertar
         if (gameMode === 'provincias') {
-            // Modo normal: buscamos provincias que no estén verdes
             remaining = regions.filter(r => {
                 const el = document.getElementById(r.id);
+                // Si el elemento existe y NO tiene la clase 'correct', es candidato
                 return el && !el.classList.contains('correct');
             });
         } else {
-            // Modo Comunidades: buscamos comunidades que no estén completas
             remaining = communities.filter(c => {
-                // Una comunidad falta si alguna de sus provincias NO está verde
+                // La comunidad falta si ALGUNA de sus provincias no está 'correct'
                 return c.ids.some(id => {
                     const el = document.getElementById(id);
                     return el && !el.classList.contains('correct');
@@ -530,34 +503,52 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        // B. SI YA NO QUEDA NADA
         if (remaining.length === 0) {
-            feedbackEl.textContent = "¡FELICIDADES! ¡COMPLETASTE EL MAPA! 🏆";
-            // Efecto de celebración opcional:
+            feedbackEl.textContent = "¡FELICIDADES! ¡MAPA COMPLETADO! 🏆";
             feedbackEl.style.color = "gold";
+            targetEl.textContent = "FIN";
             return;
         }
 
-        // C. ELEGIR AL AZAR
         const randomIndex = Math.floor(Math.random() * remaining.length);
         currentTarget = remaining[randomIndex];
         
         targetEl.textContent = currentTarget.name.toUpperCase();
         feedbackEl.textContent = "";
         
-        // Limpiamos errores previos, pero dejamos los aciertos (verdes)
-        document.querySelectorAll('.region').forEach(el => {
-            el.classList.remove('wrong');
-        });
-
-        // IMPORTANTE: Permitimos volver a hacer clic
         canClick = true; 
     }
-    drawMap();
-    });
 
-    // Función global para el botón Volver
-    window.goBack = function() {
+    // --- FUNCIÓN 5: INICIAR JUEGO ---
+    // Esta función se llama desde el HTML (window.startGame)
+    window.startGame = function(mode) {
+        gameMode = mode;
+        document.getElementById('home-menu').style.display = 'none'; 
+        document.getElementById('game-screen').style.display = 'block'; 
+        
+        score = 0;
+        scoreEl.textContent = 0;
+        
+        // Limpiar colores del mapa
+        document.querySelectorAll('.region').forEach(el => {
+            el.classList.remove('correct', 'wrong');
+            el.style.fill = ""; // Limpiar color inline
+        });
+
+        pickNewMission();
+    };
+
+    // Dibujar el mapa al cargar la página
+    drawMap();
+
+}); // Fin del DOMContentLoaded
+
+// --- FUNCIÓN GLOBAL: VOLVER ---
+// Tiene que estar fuera del addEventListener para que el botón HTML la encuentre
+window.goBack = function() {
     document.getElementById('game-screen').style.display = 'none';
-    document.getElementById('home-menu').style.display = 'flex'; // O 'block', según tu CSS
+    document.getElementById('home-menu').style.display = 'flex'; // Usamos flex para centrar
+    
+    // Opcional: Reiniciar texto
+    document.getElementById('feedback-message').textContent = "";
 };
