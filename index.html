@@ -9,28 +9,32 @@
 <body>
 
     <div class="game-board">
-        <header>
-            <h1>🌍 ¡Encuentra la provincia!</h1>
-            <div class="mission-box">
-                <p>Busca: <span id="target-region">...</span></p>
-            </div>
-        </header>
-        
-        <div class="game-layout">
-            <div id="map-container">
-                <svg id="spain-svg" viewBox="150 10 420 350" preserveAspectRatio="xMidYMid meet">
-                    </svg>
-            </div>
-
-            <aside class="side-panel">
-                <div class="score-card">
-                    <span class="label">PUNTOS</span>
-                    <span id="score">0</span>
-                </div>
-                <p id="feedback-message"></p>
-            </aside>
+    <header>
+        <h1>🌍 ¡Encuentra la provincia!</h1>
+        <div class="mission-box">
+            <p>Busca: <span id="target-region">...</span></p>
         </div>
+    </header>
+    
+    <div class="game-main-area">
+        
+        <div id="map-container">
+            <svg id="spain-svg" viewBox="150 10 420 350" preserveAspectRatio="xMidYMid meet">
+                </svg>
+        </div>
+
+        <aside class="side-panel">
+            <div class="score-card">
+                <span class="label">PUNTOS</span>
+                <span id="score">0</span>
+            </div>
+            <div class="feedback-container">
+                <p id="feedback-message"></p>
+            </div>
+        </aside>
+
     </div>
+</div>
 
     <script src="script.js"></script>
 </body>

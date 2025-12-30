@@ -315,72 +315,71 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     ];
 
-    const svg = document.getElementById('spain-svg');
+   // 2. REFERENCIAS AL HTML (Asegúrate de que estos IDs existan en tu HTML)
+    const svg = document.getElementById('spain-svg'); 
     const scoreEl = document.getElementById('score');
     const targetEl = document.getElementById('target-region');
     const feedbackEl = document.getElementById('feedback-message');
 
+    // 3. VARIABLES DE ESTADO
     let currentTarget = null;
     let score = 0;
+    let canClick = true; // Para evitar que el niño haga clics locos mientras sale el mensaje
 
-    // A. Función para dibujar los paths en el SVG
-    // A. Función para dibujar los paths en el SVG
+    // 4. FUNCIÓN PARA DIBUJAR (Aparecerá el mapa al cargar)
     function drawMap() {
         regions.forEach(reg => {
             const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
             path.setAttribute("d", reg.path);
-            path.setAttribute("id", reg.id); // Asegúrate de que este ID coincida con el del array
+            path.setAttribute("id", reg.id);
             path.setAttribute("class", "region");
-            
-            // Asignamos el evento de clic aquí, al momento de crear cada provincia
             path.addEventListener('click', handleSelection);
-            
             svg.appendChild(path);
         });
     }
 
-    // B. Función para elegir una nueva provincia al azar
-    function pickNewMission() {
-        // 1. Bloqueamos el clic un instante para evitar que el niño 
-        // haga doble clic por error mientras se limpia el mapa
-        canClick = false; 
-
-        // 2. Elegimos la provincia al azar
-        const randomIndex = Math.floor(Math.random() * regions.length);
-        currentTarget = regions[randomIndex];
-        
-        // 3. Actualizamos los textos (Poner el nombre en MAYÚSCULAS ayuda a leer mejor)
-        targetEl.textContent = currentTarget.name.toUpperCase();
-        feedbackEl.textContent = "";
-        
-        // 4. Limpiamos todas las provincias (Rojo y Verde)
-        document.querySelectorAll('.region').forEach(el => {
-            el.classList.remove('wrong', 'correct');
-        });
-
-        // 5. Reactivamos el clic
-        canClick = true;
-    }
-
-    // C. Función que maneja el clic
+    // 5. FUNCIÓN DE SELECCIÓN (Detecta si acertó)
     function handleSelection(e) {
+        if (!canClick) return; // Si estamos en pausa, no hace nada
+
         const clickedId = e.target.id;
 
         if (clickedId === currentTarget.id) {
+            canClick = false; // Bloqueamos clics un momento
             e.target.classList.add('correct');
             score += 10;
             scoreEl.textContent = score;
-            feedbackEl.textContent = "¡Muy bien! 🎉";
+            feedbackEl.textContent = "¡GENIAL! 🎉";
             feedbackEl.style.color = "green";
-            setTimeout(pickNewMission, 1500);
+            
+            // Esperamos 1.5 segundos y pasamos a la siguiente
+            setTimeout(() => {
+                pickNewMission();
+                canClick = true;
+            }, 1500);
         } else {
             e.target.classList.add('wrong');
-            feedbackEl.textContent = "¡Uy! Esa no es " + currentTarget.name;
+            feedbackEl.textContent = "¡Ups! Esa no es...";
             feedbackEl.style.color = "red";
+            
+            // Quitamos el color rojo después de un segundo para que pueda intentar otra vez
+            setTimeout(() => e.target.classList.remove('wrong'), 1000);
         }
     }
 
-    // Ejecución inicial
+    // 6. FUNCIÓN NUEVA MISIÓN
+    function pickNewMission() {
+        const randomIndex = Math.floor(Math.random() * regions.length);
+        currentTarget = regions[randomIndex];
+        targetEl.textContent = currentTarget.name.toUpperCase();
+        feedbackEl.textContent = "";
+        
+        // Limpiamos solo los verdes/rojos si quieres que el mapa se resetee
+        // Si quieres que el niño vaya "completando" el mapa, comenta la línea de abajo
+        document.querySelectorAll('.region').forEach(el => el.classList.remove('correct', 'wrong'));
+    }
+
+    // INICIO
     drawMap();
     pickNewMission();
 });
