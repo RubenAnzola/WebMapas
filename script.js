@@ -317,16 +317,31 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     const communityColors = [
-    "#FF5733", "#33FF57", "#3357FF", "#FF33F6", "#33FFF6", 
-    "#F6FF33", "#FF8C33", "#8C33FF", "#33FF8C", "#FF3333",
-    "#33A1FF", "#A133FF", "#FF3380", "#33FF99", "#FFA833",
-    "#3366FF", "#FF3366", "#66FF33", "#9933FF"
+    "#e6194b", // Galicia - Rojo
+    "#3cb44b", // Asturias - Verde
+    "#ffe119", // Cantabria - Amarillo
+    "#4363d8", // País Vasco - Azul
+    "#f58231", // Navarra - Naranja
+    "#911eb4", // La Rioja - Morado
+    "#46f0f0", // Aragón - Cian
+    "#f032e6", // Cataluña - Magenta
+    "#bcf60c", // Castilla y León - Lima
+    "#fabebe", // Madrid - Rosa palo
+    "#008080", // Castilla-La Mancha - Verde azulado
+    "#e6beff", // C. Valenciana - Lavanda
+    "#9a6324", // Murcia - Marrón
+    "#fffac8", // Extremadura - Crema
+    "#800000", // Andalucía - Granate
+    "#aaffc3", // Baleares - Menta
+    "#808000", // Canarias - Oliva
+    "#ffd8b1", // Ceuta/Melilla - Melocotón
+    "#000075"  // Extra (por si acaso)
 ];
  const communities = [
     { name: "Galicia", ids: ["la coruña", "lugo", "ourense", "pontevedra"] },
     { name: "Asturias", ids: ["asturias"] },
     { name: "Cantabria", ids: ["cantabria"] },
-    { name: "País Vasco", ids: ["vizcaya", "guipuzcoa", "alava"] },
+    { name: "País Vasco", ids: ["vizcaya", "guipuzcoa", "álava"] },
     { name: "Navarra", ids: ["navarra"] },
     { name: "La Rioja", ids: ["la rioja"] },
     { name: "Aragón", ids: ["huesca", "zaragoza", "teruel"] },
@@ -368,35 +383,36 @@ document.addEventListener("DOMContentLoaded", () => {
         path.setAttribute("id", reg.id);
         path.setAttribute("class", "region");
 
-        // --- CORRECCIÓN CANARIAS (Mover a la izquierda) ---
-        // Los valores de translate (-260, 50) mueven las islas a la esquina inferior izquierda
+        // --- CORRECCIÓN CANARIAS ---
+        // Las coordenadas originales están muy a la derecha (X ~ 490)
+        // Restamos unos 310 a la X para moverlas a la izquierda.
+        // Restamos un poco a la Y para subirlas ligeramente si hace falta.
         if (reg.id === "santa_cruz" || reg.id === "las_palmas") {
-            path.setAttribute("transform", "translate(-260, 50)");
+            // Ajuste manual: Mover 310px a la izquierda y subir 20px
+            path.setAttribute("transform", "translate(-310, -20)");
         }
-        // --------------------------------------------------
-
+        
         // Eventos
         path.addEventListener('click', handleSelection);
         
-        // Eventos para Hover (Resaltar comunidad)
+        // Efecto hover (resaltar toda la comunidad al pasar el mouse)
         path.addEventListener('mouseover', (e) => highlightCommunity(e.target.id, true));
         path.addEventListener('mouseout', (e) => highlightCommunity(e.target.id, false));
 
         svg.appendChild(path);
     });
 
-    // 2. Dibujar línea divisoria para Canarias (Decoración)
-    // Coordenadas aproximadas para separar Canarias del resto
+    // 2. Dibujar línea divisoria visual para las Canarias
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    line.setAttribute("x1", "160");
-    line.setAttribute("y1", "280");
-    line.setAttribute("x2", "280");
-    line.setAttribute("y2", "280");
-    line.setAttribute("class", "canarias-divider");
-    line.setAttribute("stroke", "#555"); // Color gris oscuro
+    // Coordenadas ajustadas para que aparezca encima de las islas movidas
+    line.setAttribute("x1", "130"); 
+    line.setAttribute("y1", "270");
+    line.setAttribute("x2", "230");
+    line.setAttribute("y2", "270");
+    line.setAttribute("stroke", "#555");
     line.setAttribute("stroke-width", "1");
-    // Insertamos la línea antes que las regiones para que quede al fondo si quieres, o al final
-    svg.appendChild(line); 
+    line.setAttribute("stroke-dasharray", "5,5"); // Línea discontinua
+    svg.appendChild(line);
 }
 
 // Función auxiliar para resaltar toda la comunidad al pasar el ratón
@@ -422,41 +438,39 @@ function highlightCommunity(provId, isHovering) {
 
     // 5. FUNCIÓN DE SELECCIÓN (Detecta si acertó)
   function handleSelection(e) {
-    if (!canClick) return;
-
-    const clickedId = e.target.id;
-    let isCorrect = false;
-
-    if (gameMode === 'provincias') {
-        if (clickedId === currentTarget.id) isCorrect = true;
-    } else {
-        if (currentTarget.ids.includes(clickedId)) isCorrect = true;
-    }
-
-    if (isCorrect) {
+if (isCorrect) {
         canClick = false;
         score += 10;
         scoreEl.textContent = score;
         feedbackEl.textContent = "¡MUY BIEN! 🎉";
         feedbackEl.style.color = "green";
 
-        if (gameMode === 'provincias') {
-            document.getElementById(clickedId).classList.add('correct');
-        } else {
-            // --- COLOREAR COMUNIDAD ---
-            // Buscamos el índice de la comunidad para asignarle un color único
-            const commIndex = communities.findIndex(c => c.name === currentTarget.name);
-            const color = communityColors[commIndex % communityColors.length];
+        // --- LÓGICA DE COLORES ---
+        // 1. Buscamos a qué comunidad pertenece la provincia clicada/objetivo
+        // (Usamos currentTarget.name si estamos en modo provincias, o buscamos por ID)
+        let commIndex = -1;
+        
+        // Buscamos la comunidad en el array 'communities' que contiene este ID
+        commIndex = communities.findIndex(c => c.ids.includes(clickedId));
 
-            currentTarget.ids.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.classList.add('correct');
-                    // Forzamos el color específico para esta comunidad
-                    el.style.fill = color; 
-                    el.style.stroke = "#fff"; // Borde blanco para que quede limpio
-                }
-            });
+        // Si encontramos la comunidad, cogemos su color
+        const color = (commIndex !== -1) ? communityColors[commIndex] : "#4caf50"; // Verde por defecto si falla
+
+        if (gameMode === 'provincias') {
+            const el = document.getElementById(clickedId);
+            el.classList.add('correct');
+            el.style.fill = color; // <--- AQUI APLICAMOS EL COLOR ÚNICO
+        } else {
+            // Modo Comunidades: Iluminamos todas las provincias de esa comunidad
+            if(commIndex !== -1) {
+                communities[commIndex].ids.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.classList.add('correct');
+                        el.style.fill = color; // <--- APLICAR COLOR A TODO EL GRUPO
+                    }
+                });
+            }
         }
 
         setTimeout(() => {

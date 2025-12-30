@@ -119,11 +119,11 @@ header h1 {
 
 /* 4. ESTILO DE LAS PROVINCIAS */
 .region {
-    fill: #ffffff;
-    stroke: #888;
-    stroke-width: 0.6;
+    fill: #ccc; /* Color gris por defecto */
+    stroke: #fff;
+    stroke-width: 0.5;
+    transition: fill 0.3s ease;
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
 .region:hover {
@@ -131,9 +131,23 @@ header h1 {
     stroke: #000;
 }
 
+/* Efecto hover general */
+.region:hover {
+    fill: #aaa;
+    filter: brightness(0.9);
+}
+
+/* El hover de comunidad que hicimos antes */
+.region.community-hover {
+    fill: #ffd700 !important; /* Dorado al pasar el ratón */
+    z-index: 10;
+}
+
 /* Clases de JS */
 .correct {
-    fill: var(--correct) !important;
+    /* Ya no ponemos 'fill: green' aquí, porque lo ponemos directo en el JS */
+    stroke: #fff;
+    stroke-width: 1;
 }
 
 .wrong {
