@@ -324,27 +324,32 @@ document.addEventListener("DOMContentLoaded", () => {
     let score = 0;
 
     // A. Función para dibujar los paths en el SVG
+    // A. Función para dibujar los paths en el SVG
     function drawMap() {
         regions.forEach(reg => {
             const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
             path.setAttribute("d", reg.path);
-            path.setAttribute("id", reg.id);
+            path.setAttribute("id", reg.id); // Asegúrate de que este ID coincida con el del array
             path.setAttribute("class", "region");
             
-            // Agregar el evento de clic a cada path creado
+            // Asignamos el evento de clic aquí, al momento de crear cada provincia
             path.addEventListener('click', handleSelection);
             
             svg.appendChild(path);
         });
     }
 
-    // B. Función para elegir nueva misión
+    // B. Función para elegir una nueva provincia al azar
     function pickNewMission() {
+        // Seleccionamos un objeto aleatorio del array regions
         const randomIndex = Math.floor(Math.random() * regions.length);
         currentTarget = regions[randomIndex];
+        
+        // Actualizamos el texto de la interfaz
         targetEl.textContent = currentTarget.name;
         feedbackEl.textContent = "";
         
+        // Quitamos los colores rojo (wrong) y verde (correct) de todas las provincias
         document.querySelectorAll('.region').forEach(el => {
             el.classList.remove('wrong', 'correct');
         });
