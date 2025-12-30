@@ -316,26 +316,31 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     ];
 
-    const communities = [
+    const communityColors = [
+    "#FF5733", "#33FF57", "#3357FF", "#FF33F6", "#33FFF6", 
+    "#F6FF33", "#FF8C33", "#8C33FF", "#33FF8C", "#FF3333",
+    "#33A1FF", "#A133FF", "#FF3380", "#33FF99", "#FFA833",
+    "#3366FF", "#FF3366", "#66FF33", "#9933FF"
+];
+ const communities = [
     { name: "Galicia", ids: ["la coruña", "lugo", "ourense", "pontevedra"] },
     { name: "Asturias", ids: ["asturias"] },
     { name: "Cantabria", ids: ["cantabria"] },
-    { name: "País Vasco", ids: ["vizcaya", "guipuzcoa", "álava"] }, // Ojo: usa 'avala' si no corregiste el id antes
+    { name: "País Vasco", ids: ["vizcaya", "guipuzcoa", "alava"] },
     { name: "Navarra", ids: ["navarra"] },
     { name: "La Rioja", ids: ["la rioja"] },
     { name: "Aragón", ids: ["huesca", "zaragoza", "teruel"] },
     { name: "Cataluña", ids: ["lleida", "girona", "barcelona", "tarragona"] },
     { name: "Castilla y León", ids: ["leon", "palencia", "burgos", "zamora", "valladolid", "soria", "salamanca", "avila", "segovia"] },
     { name: "Madrid", ids: ["madrid"] },
-    { name: "Castilla-La Mancha", ids: ["guadalajara", "cuenca", "toledo", "ciudad real", "albacete"] }, // Ojo: 'cuidad_real' si estaba mal escrito
+    { name: "Castilla-La Mancha", ids: ["guadalajara", "cuenca", "toledo", "ciudad real", "albacete"] },
     { name: "C. Valenciana", ids: ["castellon", "valencia", "alicante"] },
     { name: "Murcia", ids: ["murcia"] },
     { name: "Extremadura", ids: ["caceres", "badajoz"] },
     { name: "Andalucía", ids: ["huelva", "sevilla", "cordoba", "jaen", "cadiz", "malaga", "granada", "almeria"] },
-    { name: "Islas Baleares", ids: ["illes_baleares"] }, // Ojo con el id que pusiste en el array regions
-    { name: "Canarias", ids: ["santa cruz", "las palmas"] },
+    { name: "Islas Baleares", ids: ["islas baleares"] }, 
+    { name: "Canarias", ids: ["santa_cruz", "las_palmas"] },
     { name: "Ceuta y Melilla", ids: ["ceuta", "melilla"] }
-    
 ];
 
    // 2. REFERENCIAS AL HTML (Asegúrate de que estos IDs existan en tu HTML)
@@ -356,28 +361,75 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 5. FUNCIÓN PARA DIBUJAR (Aparecerá el mapa al cargar)
     function drawMap() {
-        regions.forEach(reg => {
-            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            path.setAttribute("d", reg.path);
-            path.setAttribute("id", reg.id);
-            path.setAttribute("class", "region");
-            path.addEventListener('click', handleSelection);
-            svg.appendChild(path);
+    // 1. Dibujar regiones
+    regions.forEach(reg => {
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", reg.path);
+        path.setAttribute("id", reg.id);
+        path.setAttribute("class", "region");
+
+        // --- CORRECCIÓN CANARIAS (Mover a la izquierda) ---
+        // Los valores de translate (-260, 50) mueven las islas a la esquina inferior izquierda
+        if (reg.id === "santa_cruz" || reg.id === "las_palmas") {
+            path.setAttribute("transform", "translate(-260, 50)");
+        }
+        // --------------------------------------------------
+
+        // Eventos
+        path.addEventListener('click', handleSelection);
+        
+        // Eventos para Hover (Resaltar comunidad)
+        path.addEventListener('mouseover', (e) => highlightCommunity(e.target.id, true));
+        path.addEventListener('mouseout', (e) => highlightCommunity(e.target.id, false));
+
+        svg.appendChild(path);
+    });
+
+    // 2. Dibujar línea divisoria para Canarias (Decoración)
+    // Coordenadas aproximadas para separar Canarias del resto
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", "160");
+    line.setAttribute("y1", "280");
+    line.setAttribute("x2", "280");
+    line.setAttribute("y2", "280");
+    line.setAttribute("class", "canarias-divider");
+    line.setAttribute("stroke", "#555"); // Color gris oscuro
+    line.setAttribute("stroke-width", "1");
+    // Insertamos la línea antes que las regiones para que quede al fondo si quieres, o al final
+    svg.appendChild(line); 
+}
+
+// Función auxiliar para resaltar toda la comunidad al pasar el ratón
+function highlightCommunity(provId, isHovering) {
+    if (gameMode !== 'comunidades') return; // Solo funciona en modo comunidades
+
+    // Buscar a qué comunidad pertenece la provincia
+    const comm = communities.find(c => c.ids.includes(provId));
+    
+    if (comm) {
+        comm.ids.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                if (isHovering) {
+                    el.classList.add('community-hover');
+                } else {
+                    el.classList.remove('community-hover');
+                }
+            }
         });
     }
+}
 
     // 5. FUNCIÓN DE SELECCIÓN (Detecta si acertó)
-   function handleSelection(e) {
+  function handleSelection(e) {
     if (!canClick) return;
 
     const clickedId = e.target.id;
     let isCorrect = false;
 
     if (gameMode === 'provincias') {
-        // Lógica simple: ID exacto
         if (clickedId === currentTarget.id) isCorrect = true;
     } else {
-        // Lógica de Comunidades: ¿El ID clicado está en la lista de IDs de la comunidad objetivo?
         if (currentTarget.ids.includes(clickedId)) isCorrect = true;
     }
 
@@ -388,14 +440,22 @@ document.addEventListener("DOMContentLoaded", () => {
         feedbackEl.textContent = "¡MUY BIEN! 🎉";
         feedbackEl.style.color = "green";
 
-        // EFECTO VISUAL:
         if (gameMode === 'provincias') {
             document.getElementById(clickedId).classList.add('correct');
         } else {
-            // Si acierta la comunidad, iluminamos TODAS sus provincias
+            // --- COLOREAR COMUNIDAD ---
+            // Buscamos el índice de la comunidad para asignarle un color único
+            const commIndex = communities.findIndex(c => c.name === currentTarget.name);
+            const color = communityColors[commIndex % communityColors.length];
+
             currentTarget.ids.forEach(id => {
                 const el = document.getElementById(id);
-                if (el) el.classList.add('correct');
+                if (el) {
+                    el.classList.add('correct');
+                    // Forzamos el color específico para esta comunidad
+                    el.style.fill = color; 
+                    el.style.stroke = "#fff"; // Borde blanco para que quede limpio
+                }
             });
         }
 
@@ -404,7 +464,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 1500);
 
     } else {
-        // Error
         e.target.classList.add('wrong');
         feedbackEl.textContent = "¡Ups! Intenta de nuevo.";
         feedbackEl.style.color = "red";
@@ -485,3 +544,9 @@ function startGame(mode) {
     }
     drawMap();
     });
+
+    // Función global para el botón Volver
+window.goBack = function() {
+    document.getElementById('game-screen').style.display = 'none';
+    document.getElementById('home-menu').style.display = 'flex'; // O 'block', según tu CSS
+};
