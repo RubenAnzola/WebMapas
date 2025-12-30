@@ -140,6 +140,15 @@ header h1 {
     fill: var(--wrong) !important;
 }
 
+.province-label {
+    fill: #2c3e50; /* Azul oscuro */
+    font-size: 8px; /* Tamaño pequeño para que quepa */
+    font-weight: bold;
+    pointer-events: none; /* Para que el texto no bloquee los clics */
+    text-shadow: 1px 1px 0px white, -1px -1px 0px white; /* Borde blanco */
+    transition: opacity 0.5s ease;
+}
+
 /* 5. ADAPTACIÓN PARA MÓVILES (Si la pantalla es pequeña, se pone uno bajo el otro) */
 @media (max-width: 900px) {
     .game-main-area {

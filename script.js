@@ -339,45 +339,70 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // 5. FUNCIÓN DE SELECCIÓN (Detecta si acertó)
-    function handleSelection(e) {
-        if (!canClick) return; // Si estamos en pausa, no hace nada
+   function handleSelection(e) {
+    if (!canClick) return;
 
-        const clickedId = e.target.id;
+    const clickedId = e.target.id;
+    const pathElement = e.target; // El dibujo que tocamos
 
-        if (clickedId === currentTarget.id) {
-            canClick = false; // Bloqueamos clics un momento
-            e.target.classList.add('correct');
-            score += 10;
-            scoreEl.textContent = score;
-            feedbackEl.textContent = "¡GENIAL! 🎉";
-            feedbackEl.style.color = "green";
-            
-            // Esperamos 1.5 segundos y pasamos a la siguiente
-            setTimeout(() => {
-                pickNewMission();
-                canClick = true;
-            }, 1500);
-        } else {
-            e.target.classList.add('wrong');
-            feedbackEl.textContent = "¡Ups! Esa no es...";
-            feedbackEl.style.color = "red";
-            
-            // Quitamos el color rojo después de un segundo para que pueda intentar otra vez
-            setTimeout(() => e.target.classList.remove('wrong'), 1000);
-        }
+    if (clickedId === currentTarget.id) {
+        canClick = false;
+        pathElement.classList.add('correct'); // Se queda en verde
+        score += 10;
+        scoreEl.textContent = score;
+        feedbackEl.textContent = "¡GENIAL! 🎉";
+        feedbackEl.style.color = "green";
+
+        // --- NUEVO: PONER EL NOMBRE EN EL MAPA ---
+        const box = pathElement.getBBox(); // Buscamos el centro de la provincia
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        
+        text.setAttribute("x", box.x + box.width / 2);
+        text.setAttribute("y", box.y + box.height / 2);
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("class", "province-label");
+        text.textContent = currentTarget.name;
+        
+        svg.appendChild(text); // Pegamos el nombre en el mapa
+        // ----------------------------------------
+
+        setTimeout(() => {
+            pickNewMission();
+            canClick = true;
+        }, 1500);
+    } else {
+        e.target.classList.add('wrong');
+        feedbackEl.textContent = "¡Ups! Esa no es...";
+        feedbackEl.style.color = "red";
+        setTimeout(() => e.target.classList.remove('wrong'), 1000);
     }
+}
 
     // 6. FUNCIÓN NUEVA MISIÓN
-    function pickNewMission() {
-        const randomIndex = Math.floor(Math.random() * regions.length);
-        currentTarget = regions[randomIndex];
-        targetEl.textContent = currentTarget.name.toUpperCase();
-        feedbackEl.textContent = "";
-        
-        // Limpiamos solo los verdes/rojos si quieres que el mapa se resetee
-        // Si quieres que el niño vaya "completando" el mapa, comenta la línea de abajo
-        document.querySelectorAll('.region').forEach(el => el.classList.remove('correct', 'wrong'));
+   function pickNewMission() {
+    // 1. Filtrar las provincias que aún NO tienen la clase 'correct'
+    // Esto evita que el juego pregunte dos veces por la misma provincia
+    const remaining = regions.filter(r => {
+        const el = document.getElementById(r.id);
+        return el && !el.classList.contains('correct');
+    });
+
+    if (remaining.length === 0) {
+        feedbackEl.textContent = "¡FELICIDADES! ¡COMPLETASTE EL MAPA! 🏆";
+        return;
     }
+
+    const randomIndex = Math.floor(Math.random() * remaining.length);
+    currentTarget = remaining[randomIndex];
+    
+    targetEl.textContent = currentTarget.name.toUpperCase();
+    feedbackEl.textContent = "";
+    
+    // Solo quitamos el rojo ('wrong'), el verde ('correct') se queda
+    document.querySelectorAll('.region').forEach(el => {
+        el.classList.remove('wrong');
+    });
+}
 
     // INICIO
     drawMap();
