@@ -7,34 +7,37 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <div class="game-board">
-    <header>
-        <h1>🌍 ¡Encuentra la provincia!</h1>
-        <div class="mission-box">
-            <p>Busca: <span id="target-region">...</span></p>
+    <div id="home-menu" class="menu-container">
+        <h1>España para Niños 🌍</h1>
+        <p>¡Elige tu aventura!</p>
+        <div class="menu-buttons">
+            <button onclick="startGame('comunidades')" class="btn-menu">Comunidades Autónomas</button>
+            <button onclick="startGame('provincias')" class="btn-menu">Provincias</button>
         </div>
-    </header>
-    
-    <div class="game-main-area">
-        
-        <div id="map-container">
-            <svg id="spain-svg" viewBox="150 10 420 350" preserveAspectRatio="xMidYMid meet">
-                </svg>
-        </div>
-
-        <aside class="side-panel">
-            <div class="score-card">
-                <span class="label">PUNTOS</span>
-                <span id="score">0</span>
-            </div>
-            <div class="feedback-container">
-                <p id="feedback-message"></p>
-            </div>
-        </aside>
-
     </div>
-</div>
+
+    <div id="game-screen" class="game-board" style="display: none;">
+        <header>
+            <button onclick="goToMenu()" class="btn-back">⬅ Volver</button>
+            <h1 id="game-title">¡Encuentra la provincia!</h1>
+            <div class="mission-box">
+                <p>Busca: <span id="target-region">...</span></p>
+            </div>
+        </header>
+        
+        <div class="game-main-area">
+            <div id="map-container">
+                <svg id="spain-svg" viewBox="150 10 420 350" preserveAspectRatio="xMidYMid meet"></svg>
+            </div>
+            <aside class="side-panel">
+                <div class="score-card">
+                    <span class="label">PUNTOS</span>
+                    <span id="score">0</span>
+                </div>
+                <p id="feedback-message"></p>
+            </aside>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
