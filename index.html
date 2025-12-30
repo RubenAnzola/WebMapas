@@ -7,97 +7,64 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <style>
-        /* Ajustes específicos para que el mapa se vea genial */
-        body { background-color: #87CEEB; } /* Mar azul */
-        
+        /* Estilos para que parezca un mapa educativo */
         #spain-map {
-            width: 90%; 
-            max-width: 1000px;
+            width: 95%;
+            max-width: 900px;
             height: auto;
-            margin: 0 auto;
+            margin: 20px auto;
             display: block;
-            filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.3)); /* Sombra para dar efecto 3D */
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
         }
-
         .region {
-            stroke: #fff; /* Líneas blancas entre comunidades */
-            stroke-width: 1px;
-            stroke-linejoin: round;
-            fill: #fdfae6; /* Color crema base (como mapa antiguo) */
-            transition: fill 0.3s, transform 0.2s;
+            fill: #f9f4e8; /* Color crema suave */
+            stroke: #666;    /* Bordes grises */
+            stroke-width: 0.8;
+            transition: all 0.2s;
         }
-
         .region:hover {
-            fill: #ffcc00; /* Amarillo al pasar el ratón */
-            transform: translateY(-2px); /* Pequeño salto hacia arriba */
+            fill: #ffeb3b; /* Amarillo al pasar el ratón */
             cursor: pointer;
+            stroke: #000;
+            stroke-width: 1.5;
         }
-
-        /* Clases para el juego */
-        .correct { fill: #4CAF50 !important; } /* Verde */
-        .wrong { fill: #F44336 !important; } /* Rojo */
+        .correct { fill: #4caf50 !important; } /* Verde acierto */
+        .wrong { fill: #f44336 !important; }   /* Rojo error */
     </style>
 </head>
 <body>
-
     <div class="game-container">
         <header>
             <h1>🌍 Misión: España 🇪🇸</h1>
             <div id="instruction-box">
-                <p>¡Hola explorador!</p>
-                <p id="mission-text">Busca: <span id="target-region">...</span></p>
+                <p id="mission-text">Busca: <span id="target-region">Cargando...</span></p>
             </div>
             <div id="score-board">Puntos: <span id="score">0</span></div>
         </header>
 
         <main>
-            <svg id="spain-map" viewBox="0 0 1000 850" xmlns="http://www.w3.org/2000/svg">
-                
-                <path id="galicia" class="region" d="M165,60 L220,60 L230,100 L180,130 L150,110 Z" />
-                
-                <path id="asturias" class="region" d="M220,60 L290,65 L290,100 L230,100 Z" />
-                
-                <path id="cantabria" class="region" d="M290,65 L340,70 L340,105 L290,100 Z" />
-
-                <path id="paisvasco" class="region" d="M340,70 L390,75 L380,120 L340,105 Z" />
-
-                <path id="navarra" class="region" d="M390,75 L430,80 L420,150 L380,120 Z" />
-
-                <path id="larioja" class="region" d="M340,120 L380,120 L370,145 L340,140 Z" />
-
-                <path id="aragon" class="region" d="M420,150 L430,80 L520,120 L500,250 L400,220 Z" />
-
-                <path id="cataluna" class="region" d="M520,120 L620,130 L600,230 L500,200 Z" />
-
-                <path id="castillayleon" class="region" d="M180,130 L230,100 L290,100 L340,105 L340,140 L370,145 L400,220 L330,270 L250,250 L180,200 Z" />
-
-                <path id="madrid" class="region" d="M360,260 L410,250 L400,300 L350,290 Z" />
-
-                <path id="castillalamancha" class="region" d="M330,270 L400,220 L500,250 L480,380 L350,380 L350,290 L400,300 L410,250 L360,260 Z" />
-
-                <path id="valencia" class="region" d="M500,200 L500,250 L480,380 L520,350 L530,220 Z" />
-
-                <path id="extremadura" class="region" d="M250,250 L330,270 L350,380 L280,420 L240,350 Z" />
-
-                <path id="murcia" class="region" d="M480,380 L520,350 L510,420 L470,410 Z" />
-
-                <path id="andalucia" class="region" d="M240,350 L280,420 L350,380 L470,410 L510,420 L480,480 L230,460 Z" />
-
-                <g id="baleares" class="region">
-                    <path d="M650,250 L680,260 L670,290 L640,280 Z" /> <path d="M700,230 L720,235 L710,250 Z" /> <path d="M620,300 L640,310 L630,320 Z" /> </g>
-
-                <g id="canarias" class="region" transform="translate(-50, -50)">
-                    <rect x="100" y="600" width="250" height="150" fill="none" stroke="#333" stroke-dasharray="5,5" opacity="0.5"/>
-                    <path d="M120,650 L140,660 L130,680 Z" /> <path d="M160,660 L190,680 L170,700 Z" /> <path d="M200,670 L220,675 L210,690 Z" /> <path d="M240,660 L280,670 L260,690 Z" /> </g>
-                
-                <circle id="ceuta" cx="300" cy="475" r="5" class="region" />
-                <circle id="melilla" cx="400" cy="490" r="5" class="region" />
-
+            <svg id="spain-map" viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
+                <path id="galicia" class="region" d="M148,85 L182,78 L206,85 L225,123 L205,158 L146,166 L118,142 L121,105 Z" />
+                <path id="asturias" class="region" d="M206,85 L292,82 L306,118 L225,123 Z" />
+                <path id="cantabria" class="region" d="M292,82 L345,86 L342,125 L306,118 Z" />
+                <path id="paisvasco" class="region" d="M345,86 L395,95 L392,135 L342,125 Z" />
+                <path id="navarra" class="region" d="M395,95 L445,105 L448,168 L392,135 Z" />
+                <path id="aragon" class="region" d="M445,105 L535,148 L515,285 L442,265 L430,225 L448,168 Z" />
+                <path id="cataluna" class="region" d="M535,148 L642,165 L625,268 L515,285 Z" />
+                <path id="larioja" class="region" d="M365,135 L392,135 L405,165 L365,165 Z" />
+                <path id="castillayleon" class="region" d="M225,123 L306,118 L342,125 L365,135 L365,165 L405,165 L430,225 L355,305 L222,285 L205,158 Z" />
+                <path id="madrid" class="region" d="M365,265 L408,265 L408,312 L365,312 Z" />
+                <path id="extremadura" class="region" d="M222,285 L335,305 L328,435 L235,435 L208,365 Z" />
+                <path id="castillalamancha" class="region" d="M335,305 L430,225 L442,265 L495,285 L495,435 L328,435 L355,305 Z" />
+                <path id="valencia" class="region" d="M495,285 L545,265 L545,435 L495,435 Z" />
+                <path id="murcia" class="region" d="M465,435 L505,435 L505,485 L465,485 Z" />
+                <path id="andalucia" class="region" d="M235,435 L465,435 L505,485 L485,555 L215,535 Z" />
+                <circle id="baleares" class="region" cx="645" cy="335" r="35" />
+                <rect id="canarias" class="region" x="120" y="585" width="120" height="85" />
             </svg>
             <div id="feedback-message"></div>
         </main>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
