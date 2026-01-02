@@ -1,25 +1,65 @@
-<div id="home-menu" class="menu-overlay">
-    <div class="floating-shape shape-1"></div>
-    <div class="floating-shape shape-2"></div>
-    <div class="floating-shape shape-3"></div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Explora España! - Juego de Mapas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-    <div class="menu-card">
-        <div class="logo-area">
-            <span class="emoji-logo">🌍</span>
-            <h1>¡Explora España!</h1>
-            <p class="subtitle">Elige tu aventura</p>
-        </div>
+    <div id="home-menu" class="menu-overlay">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
 
-        <div class="menu-buttons">
-            <button onclick="startGame('comunidades')" class="btn-menu btn-comunidades">
-                <span class="btn-icon">🏛️</span>
-                <span class="btn-text">Comunidades</span>
-            </button>
-            
-            <button onclick="startGame('provincias')" class="btn-menu btn-provincias">
-                <span class="btn-icon">📍</span>
-                <span class="btn-text">Provincias</span>
-            </button>
+        <div class="menu-card">
+            <div class="logo-area">
+                <span class="emoji-logo">🌍</span>
+                <h1>¡Explora España!</h1>
+                <p class="subtitle">Elige tu aventura</p>
+            </div>
+
+            <div class="menu-buttons">
+                <button onclick="startGame('comunidades')" class="btn-menu btn-comunidades">
+                    <span class="btn-icon">🏛️</span>
+                    <span class="btn-text">Comunidades</span>
+                </button>
+                
+                <button onclick="startGame('provincias')" class="btn-menu btn-provincias">
+                    <span class="btn-icon">📍</span>
+                    <span class="btn-text">Provincias</span>
+                </button>
+            </div>
         </div>
     </div>
-</div>
+
+    <div id="game-screen" class="game-board" style="display: none;">
+        <header>
+            <button onclick="goBack()" class="btn-back">⬅ Volver</button>
+            <h1 id="game-title">¡Encuentra la provincia!</h1>
+            <div class="mission-box">
+                <p>Busca: <span id="target-region">...</span></p>
+            </div>
+        </header>
+        
+        <div class="game-main-area">
+            <div id="map-container">
+                <svg id="spain-svg" viewBox="0 0 600 450" preserveAspectRatio="xMidYMid meet">
+                    </svg>
+            </div>
+
+            <aside class="side-panel">
+                <div class="score-card">
+                    <span class="label">PUNTOS</span>
+                    <span id="score">0</span>
+                </div>
+                <p id="feedback-message"></p>
+            </aside>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
