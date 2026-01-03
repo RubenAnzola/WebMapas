@@ -36,29 +36,33 @@
     </div>
 
     <div id="game-screen" class="game-board" style="display: none;">
-        <header>
-            <button onclick="goBack()" class="btn-back">⬅ Volver</button>
-            <h1 id="game-title">¡Encuentra la provincia!</h1>
+    <button onclick="goBack()" class="btn-back">⬅ Volver</button>
+    
+    <div class="game-grid">
+        
+        <div class="left-panel">
+            <header>
+                <h1 id="game-title">¡Encuentra la provincia!</h1>
+            </header>
+
             <div class="mission-box">
                 <p>Busca: <span id="target-region">...</span></p>
             </div>
-        </header>
-        
-        <div class="game-main-area">
-            <div id="map-container">
-                <svg id="spain-svg" viewBox="0 0 600 450" preserveAspectRatio="xMidYMid meet">
-                    </svg>
-            </div>
 
-            <aside class="side-panel">
+            <div class="stats-area">
                 <div class="score-card">
                     <span class="label">PUNTOS</span>
                     <span id="score">0</span>
                 </div>
-                <p id="feedback-message"></p>
-            </aside>
+                <p id="feedback-message">¡A jugar!</p>
+            </div>
         </div>
+
+        <div id="map-container">
+            <svg id="spain-svg" viewBox="0 0 600 480" preserveAspectRatio="xMidYMid meet"></svg>
+
     </div>
+</div>
 
     <script src="script.js"></script>
 </body>

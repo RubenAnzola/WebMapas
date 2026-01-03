@@ -316,6 +316,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     ];
 
+    
+
+
+    
     // 2. PALETA DE COLORES (Uno diferente para cada comunidad)
     const communityColors = [
         "#FF5733", "#33FF57", "#3357FF", "#FF33F6", "#33FFF6", 
@@ -347,6 +351,8 @@ document.addEventListener("DOMContentLoaded", () => {
         { name: "Ceuta y Melilla", ids: ["ceuta", "melilla"] }
     ];
 
+    
+
    // ELEMENTOS DEL DOM
     const svg = document.getElementById('spain-svg'); 
     const scoreEl = document.getElementById('score');
@@ -367,8 +373,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // 1. Dibujar el cuadro punteado para Canarias (fondo)
         const box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         box.setAttribute("x", "10");
-        box.setAttribute("y", "280");
-        box.setAttribute("width", "160");
+        box.setAttribute("y", "320");
+        box.setAttribute("width", "220");
         box.setAttribute("height", "100");
         box.setAttribute("class", "inset-box");
         svg.appendChild(box);
@@ -381,9 +387,9 @@ document.addEventListener("DOMContentLoaded", () => {
             path.setAttribute("class", "region");
 
             // MOVIMIENTO DE CANARIAS A LA IZQUIERDA
-            if (reg.id === "santa_cruz" || reg.id === "las_palmas") {
+            if (reg.id === "santa cruz" || reg.id === "las palmas") {
                 // translate(x, y): Restar X mueve a izquierda, Sumar Y mueve abajo
-                path.setAttribute("transform", "translate(-280, 60)"); 
+                path.setAttribute("transform", "translate(-368, 40)"); 
             }
 
             // Eventos
